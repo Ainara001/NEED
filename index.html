@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Экзамен ПМ03 + ПМ04 | Java & Web тест</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0a0c 0%, #12121a 100%);
+            color: #ededee;
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #fff, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1e1e2a;
+            padding: 1rem 1.5rem;
+            border-radius: 60px;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .score {
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .score span {
+            color: #10b981;
+            font-size: 1.8rem;
+        }
+
+        .reset-btn {
+            background: #ef4444;
+            border: none;
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .reset-btn:hover {
+            background: #dc2626;
+            transform: scale(1.02);
+        }
+
+        .question-card {
+            background: #1a1a24;
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #2d2d3a;
+            transition: 0.1s;
+        }
+
+        .question-card:hover {
+            border-color: #3b82f6;
+        }
+
+        .question-header {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .q-num {
+            background: #3b82f6;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .module-tag {
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .module-java {
+            background: #1e3a3f;
+            color: #7dd3fc;
+        }
+
+        .module-web {
+            background: #3a2a1f;
+            color: #fbbf24;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 1.2rem;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .option {
+            background: #252530;
+            padding: 0.7rem 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.1s;
+            border: 1px solid #353540;
+        }
+
+        .option:hover:not(.disabled) {
+            background: #2f2f3e;
+            border-color: #3b82f6;
+        }
+
+        .option.correct {
+            background: #0e4b2e;
+            border-color: #10b981;
+        }
+
+        .option.wrong {
+            background: #5e1e2a;
+            border-color: #ef4444;
+            text-decoration: line-through;
+        }
+
+        .disabled {
+            cursor: default;
+            opacity: 0.9;
+        }
+
+        .result {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #1a1a24;
+            border-radius: 24px;
+        }
+
+        .result-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #6b6b7a;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 1rem;
+            }
+            .question-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📚 Экзамен ПМ03 + ПМ04</h1>
+        <p>Java Core · Web · HTML/CSS/JS · React · CI/CD</p>
+    </div>
+
+    <div id="app"></div>
+
+    <footer>
+        Колледж Astana IT University | 40 вопросов | Выбери ответ → подсветка правильного/ошибочного
+    </footer>
+</div>
+
+<script>
+    // ========== БАНК ВОПРОСОВ (20 Web + 20 Java) ==========
+    const WEB_QUESTIONS = [
+        { text: "Основная цель декларации DOCTYPE:", options: ["A) Определяет механизм подключения CSS", "B) Инструмент для управления порядком JS", "C) Запускает синтаксис для сокращения тегов", "D) Очищает кэш браузера", "E) Сообщает браузеру, какому стандарту HTML соответствует документ"], correct: 4, module: "web" },
+        { text: "Суть каскадности CSS:", options: ["A) Стили применяются случайно", "B) Учитываются только внешние CSS", "C) Применяются только inline-стили", "D) Определяется приоритет различных стилей и выбирается применяемый", "E) CSS выполняется один раз"], correct: 3, module: "web" },
+        { text: "Особенность inline-стиля:", options: ["A) Самый низкий приоритет", "B) Записывается во внешнем файле", "C) Применяется ко всем элементам", "D) Используется только внутри media query", "E) Имеет самый высокий приоритет"], correct: 4, module: "web" },
+        { text: "Для чего используется тег <main>:", options: ["A) Хранение CSS-стилей", "B) Создание навигации", "C) Контейнер для JS", "D) Отображает основной контент страницы", "E) Загрузка файлов"], correct: 3, module: "web" },
+        { text: "Основная цель Flexbox:", options: ["A) Сжатие изображений", "B) Изменение HTML структуры", "C) Выполнение JS", "D) Гибкое размещение элементов и управление выравниванием", "E) Хранение файлов"], correct: 3, module: "web" },
+        { text: "Разница между <section> и <div>:", options: ["A) Оба одинаковы", "B) <div> семантический", "C) <section> только для оформления", "D) <div> только для текста", "E) <section> обозначает смысловой раздел, <div> нейтральный контейнер"], correct: 4, module: "web" },
+        { text: "Для чего используется media query:", options: ["A) Для JS кода", "B) Изменения HTML", "C) Связи с сервером", "D) Изменения стилей в зависимости от размера экрана", "E) Управления файлами"], correct: 3, module: "web" },
+        { text: "Преимущество Semantic HTML:", options: ["A) Увеличивает объем кода", "B) Снижает скорость загрузки", "C) Улучшает SEO и accessibility", "D) Делает CSS ненужным", "E) Исключает JS"], correct: 2, module: "web" },
+        { text: "Разница между rem и em:", options: ["A) одинаковы", "B) rem зависит от родителя, em независим", "C) em зависит от корня, rem от родителя", "D) rem зависит от корневого элемента, em от родительского", "E) используется только px"], correct: 3, module: "web" },
+        { text: "Направление по умолчанию для display: flex:", options: ["A) column", "B) reverse", "C) двумерная разметка", "D) скрывает элементы", "E) row (в строку)"], correct: 4, module: "web" },
+        { text: "Что делает метод closest() в JS DOM?", options: ["A) возвращает все элементы", "B) находит ближайший родительский элемент по селектору", "C) изменяет CSS", "D) удаляет DOM", "E) выбирает дочерние"], correct: 1, module: "web" },
+        { text: "Для чего используется localStorage?", options: ["A) изменение HTML", "B) долговременное хранение данных в браузере", "C) хранение CSS", "D) выполнение API", "E) создание DOM"], correct: 1, module: "web" },
+        { text: "Что такое event bubbling?", options: ["A) событие удаляется", "B) событие распространяется от вложенного элемента к родительским", "C) изменяется CSS", "D) останавливается функция", "E) удаляется DOM"], correct: 1, module: "web" },
+        { text: "Разница между innerText и innerHTML:", options: ["A) innerText для CSS", "B) innerHTML читает HTML-код и позволяет изменять", "C) одинаковы", "D) innerHTML игнорирует теги", "E) innerText обрабатывает структуру"], correct: 1, module: "web" },
+        { text: "Что делает метод setAttribute:", options: ["A) удаляет элемент", "B) добавляет или изменяет атрибут", "C) меняет CSS", "D) хранит переменные", "E) определяет функции"], correct: 1, module: "web" },
+        { text: "Что означает Git rebase vs merge?", options: ["A) CSS/HTML", "B) переписывание истории vs объединение", "C) API", "D) DOM", "E) JSON"], correct: 1, module: "web" },
+        { text: "Что такое Blue-Green deployment?", options: ["A) обновление дизайна", "B) перестройка API", "C) механизм безопасного обновления через две среды", "D) стиль кода", "E) формат данных"], correct: 2, module: "web" },
+        { text: "Для чего нужен rollback при деплое?", options: ["A) удаление кода", "B) возврат к предыдущей версии при ошибке", "C) остановка сервера", "D) переработка API", "E) улучшение интерфейса"], correct: 1, module: "web" },
+        { text: "Что такое CI/CD?", options: ["A) язык программирования", "B) непрерывная интеграция и доставка", "C) база данных", "D) фреймворк", "E) тип сервера"], correct: 1, module: "web" },
+        { text: "Для чего нужен Docker?", options: ["A) написание кода", "B) контейнеризация приложений", "C) тестирование API", "D) дизайн", "E) хранение файлов"], correct: 1, module: "web" }
+    ];
+
+    const JAVA_QUESTIONS = [
+        { text: "Что такое JVM?", options: ["A) Текстовый редактор", "B) Инструмент компиляции", "C) Виртуальная машина Java, выполняющая байт-код", "D) Система контроля версий", "E) Инструмент сборки"], correct: 2, module: "java" },
+        { text: "Какой тип данных хранит true/false в Java?", options: ["A) int", "B) bit", "C) boolean", "D) flag", "E) bool"], correct: 2, module: "java" },
+        { text: "Что такое автоматическое приведение типов (widening)?", options: ["A) преобразование большего в меньший", "B) автоматическое преобразование меньшего в больший без потери", "C) преобразование строки в число", "D) создание нового типа", "E) преобразование char в String"], correct: 1, module: "java" },
+        { text: "Чему равно 5 != 5?", options: ["A) true", "B) false", "C) 1", "D) -1", "E) null"], correct: 1, module: "java" },
+        { text: "Что делает оператор continue внутри цикла?", options: ["A) перезапускает цикл", "B) завершает программу", "C) пропускает текущую итерацию и переходит к следующей", "D) передаёт управление внешнему циклу", "E) останавливает цикл"], correct: 2, module: "java" },
+        { text: "Какой метод класса Math возвращает модуль числа?", options: ["A) Math.mod()", "B) Math.absolute()", "C) Math.abs()", "D) Math.value()", "E) Math.positive()"], correct: 2, module: "java" },
+        { text: "Как получить длину строки s в Java?", options: ["A) s.size()", "B) s.length()", "C) len(s)", "D) s.count()", "E) String.length(s)"], correct: 1, module: "java" },
+        { text: "Какой общий родительский интерфейс у List и Set?", options: ["A) Array", "B) Map", "C) Collection", "D) Iterable", "E) Comparable"], correct: 2, module: "java" },
+        { text: "Что будет, если в классе нет конструктора?", options: ["A) нельзя создать объект", "B) нельзя инициализировать поля", "C) Java автоматически добавит конструктор по умолчанию", "D) ошибка компиляции", "E) класс станет абстрактным"], correct: 2, module: "java" },
+        { text: "Порядок модификаторов доступа (от самого закрытого к открытому)?", options: ["A) public → protected → private → default", "B) private → default → protected → public", "C) protected → private → public", "D) default → private → public", "E) public → private → default → protected"], correct: 1, module: "java" },
+        { text: "Что такое интерфейс в Java?", options: ["A) класс с private методами", "B) контракт методов, который класс должен реализовать", "C) коллекция", "D) Enum", "E) только static методы"], correct: 1, module: "java" },
+        { text: "Как объявить, что метод может выбросить исключение?", options: ["A) catch IOException", "B) exception IOException", "C) throws IOException", "D) throw IOException", "E) try IOException"], correct: 2, module: "java" },
+        { text: "Зачем переопределяют equals()?", options: ["A) ускорение JVM", "B) для массивов", "C) для вывода", "D) для сравнения объектов по содержимому", "E) для deep copy"], correct: 3, module: "java" },
+        { text: "Как получить значение из Map по ключу?", options: ["A) map.value(key)", "B) map[key]", "C) map.find(key)", "D) map.fetch(key)", "E) map.get(key)"], correct: 4, module: "java" },
+        { text: "Что такое LinkedHashMap?", options: ["A) сортирует по алфавиту", "B) сохраняет порядок добавления", "C) потокобезопасная версия", "D) массив", "E) только для String"], correct: 1, module: "java" },
+        { text: "Какой класс читает текстовый файл построчно?", options: ["A) FileReader", "B) Scanner", "C) BufferedReader", "D) FileInputStream", "E) TextReader"], correct: 2, module: "java" },
+        { text: "Что означает ключевое слово final для переменной?", options: ["A) можно менять", "B) только static", "C) нельзя изменить после инициализации", "D) только для классов", "E) только для методов"], correct: 2, module: "java" },
+        { text: "Что такое полиморфизм в ООП?", options: ["A) много объектов", "B) несколько наследований", "C) работа через общий интерфейс / один интерфейс — разная реализация", "D) overloading", "E) автоматическое создание"], correct: 2, module: "java" },
+        { text: "Какой метод запускается при старте Java-программы?", options: ["A) start()", "B) begin()", "C) main()", "D) run()", "E) init()"], correct: 2, module: "java" },
+        { text: "Что такое исключение (Exception) в Java?", options: ["A) переменная", "B) событие, нарушающее выполнение программы", "C) метод", "D) оператор", "E) ключевое слово"], correct: 1, module: "java" }
+    ];
+
+    // Перемешивание массива
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    // Объединяем и перемешиваем
+    let allQuestions = shuffleArray([...WEB_QUESTIONS, ...JAVA_QUESTIONS]);
+    let userAnswers = new Array(40).fill(null);
+    let answered = new Array(40).fill(false);
+
+    function render() {
+        const app = document.getElementById('app');
+        let correctCount = 0;
+        for (let i = 0; i < allQuestions.length; i++) {
+            if (answered[i] && userAnswers[i] === allQuestions[i].correct) correctCount++;
+        }
+
+        let html = `
+            <div class="stats">
+                <div class="score">✅ Правильно: <span>${correctCount}</span> / ${allQuestions.length}</div>
+                <button class="reset-btn" id="resetBtn">⟳ Начать заново</button>
+            </div>
+        `;
+
+        for (let i = 0; i < allQuestions.length; i++) {
+            const q = allQuestions[i];
+            const moduleClass = q.module === 'java' ? 'module-java' : 'module-web';
+            const moduleName = q.module === 'java' ? '☕ JAVA' : '🌐 WEB';
+            const isAnswered = answered[i];
+            const selected = userAnswers[i];
+            const correctIdx = q.correct;
+
+            let optionsHtml = '';
+            for (let optIdx = 0; optIdx < q.options.length; optIdx++) {
+                let extraClass = '';
+                if (isAnswered) {
+                    if (optIdx === correctIdx) extraClass = 'correct';
+                    if (optIdx === selected && selected !== correctIdx) extraClass = 'wrong';
+                }
+                const disabledClass = isAnswered ? 'disabled' : '';
+                optionsHtml += `
+                    <div class="option ${extraClass} ${disabledClass}" data-qidx="${i}" data-optidx="${optIdx}">
+                        ${q.options[optIdx]}
+                    </div>
+                `;
+            }
+
+            html += `
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="q-num">Вопрос ${i + 1}</span>
+                        <span class="module-tag ${moduleClass}">${moduleName}</span>
+                    </div>
+                    <div class="question-text">${escapeHtml(q.text)}</div>
+                    <div class="options">
+                        ${optionsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        const percent = Math.round((correctCount / allQuestions.length) * 100);
+        let resultMsg = '';
+        if (correctCount === allQuestions.length) resultMsg = '🏆 Идеально! Ты мастер Java и Web! 🎉';
+        else if (correctCount >= 30) resultMsg = `✅ Отлично! ${correctCount}/40 (${percent}%) — ты готов к экзамену!`;
+        else if (correctCount >= 20) resultMsg = `📘 Хорошо! ${correctCount}/40 (${percent}%). Повтори ошибочные вопросы.`;
+        else resultMsg = `⚠️ ${correctCount}/40 (${percent}%). Нужно повторить теорию по ПМ03 и ПМ04!`;
+
+        html += `
+            <div class="result">
+                <div class="result-text">${resultMsg}</div>
+            </div>
+        `;
+
+        app.innerHTML = html;
+
+        // Вешаем обработчики
+        document.querySelectorAll('.option:not(.disabled)').forEach(opt => {
+            opt.addEventListener('click', (e) => {
+                const qidx = parseInt(opt.dataset.qidx);
+                const optidx = parseInt(opt.dataset.optidx);
+                if (answered[qidx]) return;
+                answered[qidx] = true;
+                userAnswers[qidx] = optidx;
+                render();
+            });
+        });
+
+        document.getElementById('resetBtn')?.addEventListener('click', () => {
+            allQuestions = shuffleArray([...WEB_QUESTIONS, ...JAVA_QUESTIONS]);
+            userAnswers = new Array(40).fill(null);
+            answered = new Array(40).fill(false);
+            render();
+        });
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    render();
+</script>
+</body>
+</html>
